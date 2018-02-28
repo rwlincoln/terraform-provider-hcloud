@@ -33,6 +33,12 @@ func resourceServer() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"image_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Default:  "system",
+			},
 			"location": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -100,6 +106,7 @@ func resourceServerCreate(d *schema.ResourceData, m interface{}) error {
 		},
 		Image: &hcloud.Image{
 			Name: d.Get("image").(string),
+			Type: hcloud.ImageType(d.Get("image_type").(string)),
 		},
 		UserData: d.Get("user_data").(string),
 	}
@@ -177,6 +184,9 @@ func resourceServerRead(d *schema.ResourceData, m interface{}) error {
 			d.Set("image", server.Image.Name)
 		} else {
 			d.Set("image", server.Image.ID)
+		}
+		if server.Image.Type != "" {
+			d.Set("image_type", string(server.Image.Type))
 		}
 	}
 

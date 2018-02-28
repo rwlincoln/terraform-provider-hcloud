@@ -232,6 +232,9 @@ func testAccCheckServerAttributes(server *hcloud.Server) resource.TestCheckFunc 
 		if server.Image.Name != "debian-9" {
 			return fmt.Errorf("Bad server.Image.Name: %s", server.Image.Name)
 		}
+		if server.Image.Type != hcloud.ImageTypeSystem {
+			return fmt.Errorf("Bad server.Image.Type: %s", server.Image.Type)
+		}
 
 		if server.ServerType.Name != "cx11" {
 			return fmt.Errorf("Bad server.ServerType.Name: %s", server.ServerType.Name)
@@ -268,6 +271,7 @@ resource "hcloud_server" "foobar" {
   name          = "foo-%d"
   server_type   = "cx11"
   image         = "debian-9"
+  image_type    = "system"
   datacenter    = "fsn1-dc8"
 	user_data     = "stuff"
 	backup_window = "22-02"
